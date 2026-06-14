@@ -11,7 +11,10 @@ steam_card.html
 保留模板：
 
 ```text
+steam_card.html
 steam_magazine_card.html
+steam_terminal_card.html
+steam_poster_card.html
 ```
 
 ## 配置规则

@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07090b;
+      --panel: #11161a;
+      --panel-2: #171f24;
+      --text: #e8f7ef;
+      --muted: #8ca49a;
+      --line: rgba(150, 255, 210, .22);
+      --accent: #7dffb2;
+      --amber: #ffd56a;
+      --danger: #ff6d6d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        linear-gradient(rgba(125, 255, 178, .045) 1px, transparent 1px),
+        radial-gradient(circle at 78% 18%, rgba(255, 213, 106, .14), transparent 30%),
+        var(--bg);
+      background-size: 100% 6px, auto, auto;
+      color: var(--text);
+      font-family: Consolas, "Cascadia Mono", "Microsoft YaHei", monospace;
+    }
+
+    .card {
+      width: 100%;
+      padding: clamp(16px, 3vw, 34px);
+    }
+
+    .terminal {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(17, 22, 26, .94);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .42);
+    }
+
+    .bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #0d1114;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    .dot:nth-child(2) {
+      background: var(--amber);
+    }
+
+    .dot:nth-child(3) {
+      background: var(--accent);
+    }
+
+    .path {
+      min-width: 0;
+      margin-left: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(320px, 1.05fr);
+      gap: 0;
+    }
+
+    .left {
+      min-width: 0;
+      padding: clamp(22px, 3vw, 38px);
+      border-right: 1px solid var(--line);
+    }
+
+    .prompt {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      margin: 0;
+      color: #f5fff9;
+      font-size: clamp(34px, 5vw, 68px);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .description {
+      margin: 22px 0 0;
+      color: #c7ddd3;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      font-size: clamp(17px, 1.9vw, 22px);
+      line-height: 1.62;
+      overflow-wrap: anywhere;
+    }
+
+    .records {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .record {
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid rgba(150, 255, 210, .16);
+      border-radius: 6px;
+      background: rgba(125, 255, 178, .045);
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .value {
+      display: block;
+      color: #f0fff7;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .right {
+      display: grid;
+      min-width: 0;
+      grid-template-rows: auto 1fr auto;
+      background: var(--panel-2);
+    }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      min-height: 300px;
+      border-bottom: 1px solid var(--line);
+      background: #0d1114;
+    }
+
+    .screen img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      object-fit: cover;
+      filter: saturate(.92) contrast(1.08);
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, transparent 0, rgba(125, 255, 178, .055) 50%, transparent 100%),
+        linear-gradient(90deg, rgba(7, 9, 11, .68), transparent 58%);
+      pointer-events: none;
+    }
+
+    .fallback {
+      display: grid;
+      min-height: 300px;
+      place-items: center;
+      padding: 24px;
+      color: var(--accent);
+      font-size: 28px;
+      font-weight: 800;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .price-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: clamp(18px, 2.4vw, 28px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .discount {
+      padding: 8px 11px;
+      border-radius: 5px;
+      background: var(--accent);
+      color: #08110c;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .price {
+      min-width: 0;
+      color: #f6fff9;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 900;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .original {
+      color: var(--muted);
+      font-size: 15px;
+      text-decoration: line-through;
+      white-space: nowrap;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: clamp(18px, 2.4vw, 26px);
+    }
+
+    .chip {
+      max-width: 100%;
+      padding: 6px 9px;
+      border: 1px solid rgba(150, 255, 210, .24);
+      border-radius: 5px;
+      color: #d7f4e7;
+      font-size: 13px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .url {
+      flex-basis: 100%;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .watermark {
+      margin-left: auto;
+      color: rgba(232, 247, 239, .55);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .left {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .card {
+        padding: 12px;
+      }
+
+      .records {
+        grid-template-columns: 1fr;
+      }
+
+      .price-box {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% set screenshots = app.screenshots or [] %}
+  {% set genres = app.genres or [] %}
+  {% set platforms = app.platforms or [] %}
+
+  <main class="card">
+    <article class="terminal">
+      <div class="bar">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="path">steam://app/{{ app.appid }} / {{ app.name }}</span>
+      </div>
+
+      <div class="shell">
+        <section class="left">
+          <p class="prompt">&gt; open store_record --appid {{ app.appid }}</p>
+          <h1>{{ app.name }}</h1>
+
+          {% if app.short_description %}
+          <p class="description">{{ app.short_description }}</p>
+          {% endif %}
+
+          <div class="records">
+            <div class="record">
+              <span class="label">release</span>
+              <span class="value">{{ app.release_date }}</span>
+            </div>
+            {% if app.developers %}
+            <div class="record">
+              <span class="label">developer</span>
+              <span class="value">{{ app.developers | join(", ") }}</span>
+            </div>
+            {% endif %}
+            {% if app.publishers %}
+            <div class="record">
+              <span class="label">publisher</span>
+              <span class="value">{{ app.publishers | join(", ") }}</span>
+            </div>
+            {% endif %}
+            <div class="record">
+              <span class="label">platform</span>
+              <span class="value">{{ platforms[:3] | join(" / ") if platforms else "Steam" }}</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="right">
+          <div class="screen">
+            {% if screenshots %}
+            <img src="{{ screenshots[0] }}" alt="{{ app.name }}">
+            {% elif app.header_image %}
+            <img src="{{ app.header_image }}" alt="{{ app.name }}">
+            {% elif app.capsule_image %}
+            <img src="{{ app.capsule_image }}" alt="{{ app.name }}">
+            {% else %}
+            <div class="fallback">{{ app.name }}</div>
+            {% endif %}
+          </div>
+
+          <div class="price-box">
+            {% if app.price.has_discount %}
+            <span class="discount">-{{ app.price.discount_percent }}%</span>
+            {% endif %}
+            {% if app.price.original %}
+            <span class="original">{{ app.price.original }}</span>
+            {% endif %}
+            <strong class="price">{{ app.price.current }}</strong>
+          </div>
+
+          <div class="chips">
+            {% for genre in genres[:5] %}
+            <span class="chip">{{ genre }}</span>
+            {% endfor %}
+            {% for platform in platforms[:3] %}
+            <span class="chip">{{ platform }}</span>
+            {% endfor %}
+            <div class="url">{{ app.url }}</div>
+            {% if watermark.enabled %}
+            <div class="watermark">{{ watermark.text }}</div>
+            {% endif %}
+          </div>
+        </aside>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

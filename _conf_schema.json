@@ -40,15 +40,21 @@
     "default": 1
   },
   "browser_executable_path": {
-    "description": "可选 Chromium 兼容浏览器可执行文件路径；自动探测系统浏览器目前仅内置 Windows 常见路径",
+    "description": "可选 Chrome/Edge 浏览器可执行文件路径",
     "type": "string",
     "default": ""
   },
-  "card_template": {
-    "description": "内置模板文件名",
-    "type": "string",
-    "default": "steam_card.html"
-  },
+"card_template": {
+  "description": "内置模板文件名",
+  "type": "string",
+  "default": "steam_card.html",
+  "options": [
+    "steam_card.html",
+    "steam_magazine_card.html",
+    "steam_poster_card.html",
+    "steam_terminal_card.html"
+  ]
+  }, 
   "custom_template_path": {
     "description": "自定义 HTML/Jinja2 模板路径",
     "type": "string",
