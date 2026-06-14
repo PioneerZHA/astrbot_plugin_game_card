@@ -21,7 +21,7 @@ except ImportError:
 DEFAULT_CONFIG = {
     "enable_search_command": True,
     "enable_link_card": True,
-    "use_llm_translate_for_chinese": True,
+    "use_llm_translate_for_chinese": False,
     "search_result_count": 5,
     "steam_language": "schinese",
     "steam_country": "cn",
@@ -36,9 +36,9 @@ DEFAULT_CONFIG = {
 
 
 @register(
-    "astrbot_plugin_steam_card",
+    "astrbot_plugin_game_card",
     "Huaimin",
-    "Search Steam games by name and render Steam store links as image cards.",
+    "Search games and render store links as shareable image cards.",
     "0.1.0",
 )
 class SteamCardPlugin(Star):
@@ -74,7 +74,7 @@ class SteamCardPlugin(Star):
             return
 
         queries = [query]
-        if self.config.get("use_llm_translate_for_chinese", True) and contains_cjk(query):
+        if self.config.get("use_llm_translate_for_chinese", False) and contains_cjk(query):
             queries = await self.translator.expand_queries(query)
 
         limit = int(self.config.get("search_result_count", 5))
@@ -89,7 +89,16 @@ class SteamCardPlugin(Star):
         yield event.plain_result("\n".join(lines))
 
     @filter.event_message_type(filter.EventMessageType.GROUP_MESSAGE)
-    async def handle_steam_link(self, event: AstrMessageEvent):
+    async def handle_group_steam_link(self, event: AstrMessageEvent):
+        async for result in self._handle_steam_link(event):
+            yield result
+
+    @filter.event_message_type(filter.EventMessageType.PRIVATE_MESSAGE)
+    async def handle_private_steam_link(self, event: AstrMessageEvent):
+        async for result in self._handle_steam_link(event):
+            yield result
+
+    async def _handle_steam_link(self, event: AstrMessageEvent):
         if not self.config.get("enable_link_card", True):
             return
 

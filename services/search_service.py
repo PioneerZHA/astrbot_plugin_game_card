@@ -1,5 +1,7 @@
 from rapidfuzz import fuzz
 
+from astrbot.api import logger
+
 from .steam_client import SteamClient
 
 
@@ -14,7 +16,8 @@ class SteamSearchService:
                 continue
             try:
                 results = await self.client.search(query, limit=max(limit * 2, 8))
-            except Exception:
+            except Exception as exc:
+                logger.warning(f"Steam search failed for query {query!r}: {exc}")
                 continue
             for rank, result in enumerate(results):
                 appid = result["appid"]

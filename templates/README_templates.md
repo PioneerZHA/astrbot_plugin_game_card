@@ -5,13 +5,13 @@
 默认模板：
 
 ```text
-steam_magazine_card.html
+steam_card.html
 ```
 
 保留模板：
 
 ```text
-steam_card.html
+steam_magazine_card.html
 ```
 
 ## 配置规则
@@ -20,7 +20,7 @@ steam_card.html
 
 ```json
 {
-  "card_template": "steam_magazine_card.html",
+  "card_template": "steam_card.html",
   "custom_template_path": ""
 }
 ```
