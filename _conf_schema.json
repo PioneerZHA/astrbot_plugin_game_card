@@ -1,0 +1,67 @@
+{
+  "enable_search_command": {
+    "description": "启用 /steam搜索",
+    "type": "bool",
+    "default": true
+  },
+  "enable_link_card": {
+    "description": "识别链接并发图",
+    "type": "bool",
+    "default": true
+  },
+  "use_llm_translate_for_chinese": {
+    "description": "中文搜索用 AI 扩展",
+    "type": "bool",
+    "default": true
+  },
+  "search_result_count": {
+    "description": "搜索结果数量",
+    "type": "int",
+    "default": 5
+  },
+  "steam_language": {
+    "description": "商店语言",
+    "type": "string",
+    "default": "schinese"
+  },
+  "steam_country": {
+    "description": "商店地区",
+    "type": "string",
+    "default": "cn"
+  },
+  "render_viewport_width": {
+    "description": "截图宽度",
+    "type": "int",
+    "default": 1200
+  },
+  "render_device_scale_factor": {
+    "description": "截图倍率",
+    "type": "int",
+    "default": 1
+  },
+  "browser_executable_path": {
+    "description": "浏览器路径",
+    "type": "string",
+    "default": ""
+  },
+  "card_template": {
+    "description": "内置模板文件名",
+    "type": "string",
+    "default": "steam_magazine_card.html"
+  },
+  "custom_template_path": {
+    "description": "自定义模板路径",
+    "type": "string",
+    "default": ""
+  },
+  "enable_watermark": {
+    "description": "显示水印",
+    "type": "bool",
+    "default": true
+  },
+  "watermark_text": {
+    "description": "水印文案",
+    "type": "string",
+    "default": "Crafted by pioneerzha"
+  }
+}

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1016;
+      --bg-soft: #101923;
+      --panel: #16202b;
+      --panel-strong: #1d2b38;
+      --text: #f2f6fb;
+      --muted: #a8b4c2;
+      --subtle: #718093;
+      --line: rgba(255, 255, 255, .12);
+      --accent: #66c0f4;
+      --accent-soft: rgba(102, 192, 244, .16);
+      --green: #a4d007;
+      --green-dark: #2d3c08;
+      --gold: #d8b35a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", Arial, sans-serif;
+    }
+
+    .steam-card {
+      width: 100%;
+      padding: clamp(22px, 3vw, 42px);
+      background:
+        linear-gradient(145deg, rgba(102, 192, 244, .18) 0%, rgba(102, 192, 244, 0) 34%),
+        linear-gradient(25deg, rgba(216, 179, 90, .12) 0%, rgba(216, 179, 90, 0) 28%),
+        linear-gradient(180deg, #111b26 0%, #0b1016 100%);
+    }
+
+    .frame {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(11, 16, 22, .72);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, .34);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(300px, 42%) minmax(0, 1fr);
+      gap: clamp(22px, 3vw, 36px);
+      padding: clamp(22px, 3vw, 38px);
+      background:
+        linear-gradient(90deg, rgba(29, 43, 56, .9), rgba(16, 25, 35, .72)),
+        radial-gradient(circle at 95% 10%, rgba(102, 192, 244, .18), transparent 34%);
+    }
+
+    .cover {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 8px;
+      background: var(--panel);
+      aspect-ratio: 16 / 7.5;
+      align-self: start;
+    }
+
+    .cover img,
+    .shot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .details {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.4vw, 58px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      max-width: 100%;
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .055);
+      color: #c7d5e0;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .price {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(164, 208, 7, .42);
+      border-radius: 6px;
+      background: rgba(7, 12, 17, .78);
+    }
+
+    .discount {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      background: var(--green);
+      color: #162000;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .price-text {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      color: #e5f2ff;
+      font-size: 23px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .price-text strong {
+      min-width: 0;
+    }
+
+    .original {
+      color: #7f8995;
+      font-size: 15px;
+      text-decoration: line-through;
+      white-space: nowrap;
+    }
+
+    .description {
+      margin: 0;
+      max-width: 65ch;
+      color: #d8e0ea;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.58;
+      overflow-wrap: anywhere;
+    }
+
+    .gallery {
+      padding: 0 clamp(22px, 3vw, 38px) clamp(22px, 3vw, 38px);
+      background: rgba(11, 16, 22, .72);
+    }
+
+    .mosaic,
+    .single-shot {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .mosaic {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      aspect-ratio: 16 / 7;
+      padding: 8px;
+    }
+
+    .single-shot {
+      aspect-ratio: 16 / 7;
+    }
+
+    .shot {
+      overflow: hidden;
+      border-radius: 6px;
+      background: #101923;
+    }
+
+    .shot-main {
+      grid-row: span 2;
+    }
+
+    .shot-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      padding: 0 clamp(22px, 3vw, 38px) clamp(22px, 3vw, 34px);
+      color: var(--muted);
+      background: rgba(11, 16, 22, .72);
+    }
+
+    .footer-inner {
+      min-width: 0;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      max-width: 100%;
+      padding: 6px 10px;
+      border-radius: 5px;
+      background: rgba(29, 43, 56, .92);
+      color: #c7d5e0;
+      font-size: 14px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .url-block {
+      min-width: 0;
+    }
+
+    .url {
+      margin-top: 12px;
+      color: var(--accent);
+      font-size: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .watermark {
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: rgba(199, 213, 224, .66);
+      font-size: 13px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 820px) {
+      .hero,
+      .footer {
+        grid-template-columns: 1fr;
+      }
+
+      .cover {
+        aspect-ratio: 16 / 8;
+      }
+
+      .mosaic {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        aspect-ratio: auto;
+      }
+
+      .shot,
+      .single-shot {
+        aspect-ratio: 16 / 9;
+      }
+
+      .shot-main {
+        grid-row: auto;
+      }
+
+      .watermark {
+        padding-top: 0;
+        border-top: 0;
+        text-align: left;
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .steam-card {
+        padding: 14px;
+      }
+
+      .hero,
+      .gallery,
+      .footer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .price {
+        display: flex;
+        width: 100%;
+      }
+
+      .price-text {
+        flex: 1;
+        flex-wrap: wrap;
+        font-size: 20px;
+      }
+
+      .discount {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% set screenshots = app.screenshots or [] %}
+  {% set has_mosaic = screenshots | length >= 4 %}
+
+  <main class="steam-card">
+    <article class="frame">
+      <section class="hero">
+        <div class="cover">
+          {% if app.header_image %}
+          <img src="{{ app.header_image }}" alt="{{ app.name }}">
+          {% elif app.capsule_image %}
+          <img src="{{ app.capsule_image }}" alt="{{ app.name }}">
+          {% endif %}
+        </div>
+
+        <div class="details">
+          <p class="eyebrow">Steam Game</p>
+          <h1>{{ app.name }}</h1>
+
+          <div class="meta">
+            <span class="pill">发行日期：{{ app.release_date }}</span>
+            {% if app.developers %}
+            <span class="pill">开发商：{{ app.developers | join(", ") }}</span>
+            {% endif %}
+            {% if app.publishers %}
+            <span class="pill">发行商：{{ app.publishers | join(", ") }}</span>
+            {% endif %}
+          </div>
+
+          <div class="price">
+            {% if app.price.has_discount %}
+            <div class="discount">-{{ app.price.discount_percent }}%</div>
+            {% endif %}
+            <div class="price-text">
+              {% if app.price.original %}
+              <span class="original">{{ app.price.original }}</span>
+              {% endif %}
+              <strong>{{ app.price.current }}</strong>
+            </div>
+          </div>
+
+          {% if app.short_description %}
+          <p class="description">{{ app.short_description }}</p>
+          {% endif %}
+        </div>
+      </section>
+
+      {% if screenshots %}
+      <section class="gallery" aria-label="游戏截图">
+        {% if has_mosaic %}
+        <div class="mosaic">
+          <div class="shot shot-main">
+            <img src="{{ screenshots[0] }}" alt="{{ app.name }} screenshot 1">
+          </div>
+          <div class="shot">
+            <img src="{{ screenshots[1] }}" alt="{{ app.name }} screenshot 2">
+          </div>
+          <div class="shot-strip">
+            <div class="shot">
+              <img src="{{ screenshots[2] }}" alt="{{ app.name }} screenshot 3">
+            </div>
+            <div class="shot">
+              <img src="{{ screenshots[3] }}" alt="{{ app.name }} screenshot 4">
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="single-shot shot">
+          <img src="{{ screenshots[0] }}" alt="{{ app.name }} screenshot">
+        </div>
+        {% endif %}
+      </section>
+      {% endif %}
+
+      <section class="footer">
+        <div class="footer-inner url-block">
+          <div class="tags">
+            {% for genre in app.genres[:6] %}
+            <span class="tag">{{ genre }}</span>
+            {% endfor %}
+            {% for platform in app.platforms[:3] %}
+            <span class="tag">{{ platform }}</span>
+            {% endfor %}
+          </div>
+          <div class="url">{{ app.url }}</div>
+        </div>
+
+        {% if watermark.enabled %}
+        <div class="watermark">{{ watermark.text }}</div>
+        {% endif %}
+      </section>
+    </article>
+  </main>
+</body>
+</html>
