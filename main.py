@@ -37,7 +37,7 @@ DEFAULT_CONFIG = {
 
 @register(
     "astrbot_plugin_game_card",
-    "Huaimin",
+    "PioneerZHA",
     "Search games and render store links as shareable image cards.",
     "0.1.0",
 )

@@ -136,7 +136,7 @@ class HtmlImageRenderer:
 
         raise BrowserUnavailableError(
             "Playwright cannot launch Chromium. Run `playwright install chromium`, "
-            "or set browser_executable_path to a Chrome/Edge executable."
+            "or set browser_executable_path to a Chromium-compatible browser executable."
         ) from RuntimeError("\n".join(errors))
 
     def _browser_candidates(self) -> list[str]:
